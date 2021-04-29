@@ -20,24 +20,20 @@ class ChessPiece
 			LoadSprite();
 		}
 
-		void UpdatePosition(olc::vi2d vMousePos, bool bRightMousePress)
+		bool IsSelected(olc::vi2d vMousePos, bool bRightMousePress)
 		{
-			if (vMousePos.x > vPos.x && vMousePos.x < (vPos.x + vSize.x) && vMousePos.y > vPos.y && vMousePos.y < (vPos.y + vSize.y) && bRightMousePress == true)
-			{
-				vPos.x = vMousePos.x - (vSize.x / 2);
-				vPos.y = vMousePos.y - (vSize.y / 2);
-			}
+			return (vMousePos.x > vPos.x && vMousePos.x < (vPos.x + vSize.x) && vMousePos.y > vPos.y && vMousePos.y < (vPos.y + vSize.y) && bRightMousePress == true);
+		}
 
-			if (!bRightMousePress)
-			{
-				int iXPos = ((vPos.x + (vSize.x / 2)) % vSize.x);
-				int iYPos = ((vPos.y + (vSize.y / 2)) % vSize.y);
+		void SnapToGrid()
+		{
+			int iXPos = ((vPos.x + (vSize.x / 2)) % vSize.x);
+			int iYPos = ((vPos.y + (vSize.y / 2)) % vSize.y);
 
-				if (iXPos != 0)
-				{
-					vPos.x -= iXPos - (vSize.x / 2);
-					vPos.y -= iYPos - (vSize.y / 2);
-				}
+			if (iXPos != 0)
+			{
+				vPos.x -= iXPos - (vSize.x / 2);
+				vPos.y -= iYPos - (vSize.y / 2);
 			}
 		}
 
