@@ -1,34 +1,43 @@
 #include "olcPixelGameEngine.h"
 
 
-class ChessPiece : public olc::PixelGameEngine
+class ChessPiece
 {
 	public:
 		olc::vi2d vPos;
 		olc::vi2d vSpritePos;
 		std::unique_ptr<olc::Sprite> sprSprite;
 
-	public:
-		ChessPiece(int x, int y)
-		{
-			vPos = {x, y};
+		olc::vi2d vSize;
 
-			LoadSprite();
-		}
+	public:
 		ChessPiece()
 		{
 			vPos = {0, 0};
 			vSpritePos = {0, 0};
+			vSize = {64, 64};
 
 			LoadSprite();
 		}
 
-		void UpdatePosition(olc::vi2d vMousePos, bool bRighMousePress)
+		void UpdatePosition(olc::vi2d vMousePos, bool bRightMousePress)
 		{
-			if (vMousePos.x > vPos.x && vMousePos.x < (vPos.x + 64) && vMousePos.y > vPos.y && vMousePos.y < (vPos.y + 64)) // && bRighMousePress == true
+			if (vMousePos.x > vPos.x && vMousePos.x < (vPos.x + vSize.x) && vMousePos.y > vPos.y && vMousePos.y < (vPos.y + vSize.y) && bRightMousePress == true)
 			{
-				vPos.x = vMousePos.x;
-				vPos.y = vMousePos.y;
+				vPos.x = vMousePos.x - (vSize.x / 2);
+				vPos.y = vMousePos.y - (vSize.y / 2);
+			}
+
+			if (!bRightMousePress)
+			{
+				int iXPos = ((vPos.x + (vSize.x / 2)) % vSize.x);
+				int iYPos = ((vPos.y + (vSize.y / 2)) % vSize.y);
+
+				if (iXPos != 0)
+				{
+					vPos.x -= iXPos - (vSize.x / 2);
+					vPos.y -= iYPos - (vSize.y / 2);
+				}
 			}
 		}
 

@@ -148,13 +148,11 @@ public:
 		Clear(olc::BLACK);
 		DrawChessBoard();
 
-		std::cout << GetMousePos() << std::endl;
-		std::cout << GetMouse(0).bHeld << std::endl;
-
 		// draw and update all pieces
 		SetPixelMode(olc::Pixel::MASK);
 		for (int i = 0 ; i < 32 ; i++)
 		{
+			pieces[i].UpdatePosition(GetMousePos(), GetMouse(0).bHeld);
 			DrawChessPiece(&pieces[i]);
 		}
 		SetPixelMode(olc::Pixel::NORMAL);
