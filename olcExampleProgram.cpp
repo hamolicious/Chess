@@ -19,7 +19,7 @@ private:
 	olc::Pixel pBlackColor = {107, 122, 101};
 
 	ChessPiece nullSelection;
-	ChessPiece* ptrSelection;
+	ChessPiece *ptrSelection;
 
 public:
 	void DrawChessBoard()
@@ -40,56 +40,59 @@ public:
 		}
 	}
 
-	void DrawChessPiece(ChessPiece* p)
+	void DrawChessPiece(ChessPiece *p)
 	{
 		DrawPartialSprite(p->vPos, p->sprSprite.get(), p->vSpritePos * iGridSize, olc::vi2d(1, 1) * iGridSize);
 	}
 
 	void ArrangePieces()
 	{
-		int iFileCounter = 0;
-		olc::vi2d vFileOffset[] = {
-			olc::vi2d(1, 0),
-			olc::vi2d(2, 0),
-			olc::vi2d(3, 0),
-			olc::vi2d(5, 0),
-			olc::vi2d(4, 0),
-			olc::vi2d(3, 0),
-			olc::vi2d(2, 0),
-			olc::vi2d(1, 0)
-		};
+		char cLayout[8][8] =
+			{
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+				{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
+			};
 
-		for (int i = 0; i < 8; i++)
+		for (int y = 0; y < 4; y++)
 		{
-			// white pawn
-			pieces[i].vPos.x = iGridSize * i;
-			pieces[i].vPos.y = iGridSize;
+			for (int x = 0; x < 8; x++)
+			{
+				char *cPiece = &cLayout[y][x];
 
-			pieces[i].vSpritePos.x = 0;
-			pieces[i].vSpritePos.y = 0;
+				int iPX = x * iGridSize;
+				int iPY = y * iGridSize;
 
-			// white others
-			pieces[i + 16].vPos.x = iGridSize * i;
-			pieces[i + 16].vPos.y = 0;
+				if (y > 1)
+				{
+					iPY += iGridSize * 4;
+				}
 
-			pieces[i + 16].vSpritePos.x = vFileOffset[iFileCounter].x;
-			pieces[i + 16].vSpritePos.y = vFileOffset[iFileCounter].y;
-
-			// black others
-			pieces[i + 24].vPos.x = iGridSize * i;
-			pieces[i + 24].vPos.y = iGridSize * 7;
-
-			pieces[i + 24].vSpritePos.x = vFileOffset[iFileCounter].x;
-			pieces[i + 24].vSpritePos.y = vFileOffset[iFileCounter].y + 1;
-
-			// black pawn
-			pieces[i + 8].vPos.x = iGridSize * i;
-			pieces[i + 8].vPos.y = iGridSize * 6;
-
-			pieces[i + 8].vSpritePos.x = 0;
-			pieces[i + 8].vSpritePos.y = 1;
-
-			iFileCounter++;
+				switch (*cPiece)
+				{
+				case ' ':
+					pieces[x + 8 * y] = Pawn({iPX, iPY}, y>1);
+					break;
+				case 'R':
+					pieces[x + 8 * y] = Rook({iPX, iPY}, y>1);
+					break;
+				case 'N':
+					pieces[x + 8 * y] = Knight({iPX, iPY}, y>1);
+					break;
+				case 'B':
+					pieces[x + 8 * y] = Bishop({iPX, iPY}, y>1);
+					break;
+				case 'Q':
+					pieces[x + 8 * y] = Queen({iPX, iPY}, y>1);
+					break;
+				case 'K':
+					pieces[x + 8 * y] = King({iPX, iPY}, y>1);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 
@@ -148,8 +151,8 @@ public:
 			return;
 		}
 
-		ptrSelection->vPos.x = GetMousePos().x - ptrSelection->vSize.x/2;
-		ptrSelection->vPos.y = GetMousePos().y - ptrSelection->vSize.y/2;
+		ptrSelection->vPos.x = GetMousePos().x - ptrSelection->vSize.x / 2;
+		ptrSelection->vPos.y = GetMousePos().y - ptrSelection->vSize.y / 2;
 	}
 
 	bool OnUserCreate() override
@@ -170,15 +173,18 @@ public:
 
 		// draw and update all pieces
 		SetPixelMode(olc::Pixel::MASK);
-		for (int i = 0 ; i < 32 ; i++)
+		for (int i = 0; i < 32; i++)
 		{
+			// check if mouse if selecting this piece
 			bool bIsSelected = pieces[i].IsSelected(GetMousePos(), GetMouse(0).bHeld);
 
+			// make a selection (if exists)
 			if (ptrSelection->vPos.x == -1 && ptrSelection->vPos.y == -1 && bIsSelected)
 			{
 				ptrSelection = &pieces[i];
 			}
 
+			// snap unselected pieces to grid
 			if (ptrSelection != &pieces[i])
 			{
 				pieces[i].SnapToGrid();
@@ -189,6 +195,7 @@ public:
 		}
 		SetPixelMode(olc::Pixel::NORMAL);
 
+		// clear selection upon mouse release
 		if (!GetMouse(0).bHeld)
 		{
 			ptrSelection = &nullSelection;
@@ -197,7 +204,6 @@ public:
 		return true;
 	}
 };
-
 
 int main()
 {

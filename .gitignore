@@ -3,3 +3,4 @@
 *.ilk
 *.obj
 .vscode/
+generate_layout.py
