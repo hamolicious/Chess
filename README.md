@@ -1,4 +1,4 @@
 # Chess
 WIP Chess written in C++ using the OLC Pixel Game Engine
 
-![chess screenshot](https://i.ibb.co/wsMcWsS/Screenshot-2021-04-28-193632.png)
+![chess screenshot](https://github.com/hamolicious/Chess/blob/master/screenshots/screenshot.png?raw=true)
