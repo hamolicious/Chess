@@ -5,11 +5,37 @@ class ChessPiece
 public:
 	olc::vi2d vPos;
 	olc::vi2d vSpritePos;
-	std::unique_ptr<olc::Sprite> sprSprite;
-
 	olc::vi2d vSize = {64, 64};
 
+	std::unique_ptr<olc::Sprite> sprSprite;
+
+	bool bHasMoved = false;
+
 public:
+	ChessPiece()
+	{
+		vPos = {0, 0};
+		vSpritePos = {0, 0};
+
+		LoadSprite();
+	}
+
+	ChessPiece(olc::vi2d vPos_)
+	{
+		vPos = vPos_;
+
+		LoadSprite();
+	}
+
+	ChessPiece(olc::vi2d vPos_, bool bIsBlack, int iPieceIndex)
+	{
+		vPos = vPos_;
+		vSpritePos = {iPieceIndex, (int)bIsBlack};
+
+		LoadSprite();
+	}
+
+
 	bool IsSelected(olc::vi2d vMousePos, bool bRightMousePress)
 	{
 		return (vMousePos.x > vPos.x && vMousePos.x < (vPos.x + vSize.x) && vMousePos.y > vPos.y && vMousePos.y < (vPos.y + vSize.y) && bRightMousePress == true);
@@ -35,73 +61,30 @@ public:
 
 class Pawn : public ChessPiece
 {
-public:
-	Pawn(olc::vi2d vPos_, bool bBlack)
-	{
-		vPos = vPos_;
-		vSpritePos = {0, (int)bBlack};
-
-		LoadSprite();
-	}
+	using ChessPiece::ChessPiece;
 };
 
 class Rook : public ChessPiece
 {
-public:
-	Rook(olc::vi2d vPos_, bool bBlack)
-	{
-		vPos = vPos_;
-		vSpritePos = {1, (int)bBlack};
-
-		LoadSprite();
-	}
+	using ChessPiece::ChessPiece;
 };
 
 class Knight : public ChessPiece
 {
-public:
-	Knight(olc::vi2d vPos_, bool bBlack)
-	{
-		vPos = vPos_;
-		vSpritePos = {2, (int)bBlack};
-
-		LoadSprite();
-	}
+	using ChessPiece::ChessPiece;
 };
 
 class Bishop : public ChessPiece
 {
-public:
-	Bishop(olc::vi2d vPos_, bool bBlack)
-	{
-		vPos = vPos_;
-		vSpritePos = {3, (int)bBlack};
-
-		LoadSprite();
-	}
+	using ChessPiece::ChessPiece;
 };
 
 class King : public ChessPiece
 {
-public:
-	King(olc::vi2d vPos_, bool bBlack)
-	{
-		vPos = vPos_;
-		vSpritePos = {4, (int)bBlack};
-
-		LoadSprite();
-	}
+	using ChessPiece::ChessPiece;
 };
 
 class Queen : public ChessPiece
 {
-public:
-	Queen(olc::vi2d vPos_, bool bBlack)
-	{
-		vPos = vPos_;
-		vSpritePos = {5, (int)bBlack};
-
-		LoadSprite();
-	}
+	using ChessPiece::ChessPiece;
 };
-

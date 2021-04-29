@@ -72,22 +72,22 @@ public:
 				switch (*cPiece)
 				{
 				case ' ':
-					pieces[x + 8 * y] = Pawn({iPX, iPY}, y>1);
+					pieces[x + 8 * y] = Pawn({iPX, iPY}, y>1, 0);
 					break;
 				case 'R':
-					pieces[x + 8 * y] = Rook({iPX, iPY}, y>1);
+					pieces[x + 8 * y] = Rook({iPX, iPY}, y>1, 1);
 					break;
 				case 'N':
-					pieces[x + 8 * y] = Knight({iPX, iPY}, y>1);
+					pieces[x + 8 * y] = Knight({iPX, iPY}, y>1, 2);
 					break;
 				case 'B':
-					pieces[x + 8 * y] = Bishop({iPX, iPY}, y>1);
+					pieces[x + 8 * y] = Bishop({iPX, iPY}, y>1, 3);
 					break;
 				case 'Q':
-					pieces[x + 8 * y] = Queen({iPX, iPY}, y>1);
+					pieces[x + 8 * y] = Queen({iPX, iPY}, y>1, 4);
 					break;
 				case 'K':
-					pieces[x + 8 * y] = King({iPX, iPY}, y>1);
+					pieces[x + 8 * y] = King({iPX, iPY}, y>1, 5);
 					break;
 				default:
 					break;
