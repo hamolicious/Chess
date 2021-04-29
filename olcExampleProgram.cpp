@@ -40,11 +40,6 @@ public:
 		}
 	}
 
-	void DrawChessPiece(ChessPiece *p)
-	{
-		DrawPartialSprite(p->vPos, p->sprSprite.get(), p->vSpritePos * iGridSize, olc::vi2d(1, 1) * iGridSize);
-	}
-
 	void ArrangePieces()
 	{
 		char cLayout[8][8] =
@@ -191,7 +186,7 @@ public:
 			}
 
 			UpdatePiecePosition();
-			DrawChessPiece(&pieces[i]);
+			pieces[i].Display(this, iGridSize);
 		}
 		SetPixelMode(olc::Pixel::NORMAL);
 

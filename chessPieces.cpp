@@ -57,6 +57,11 @@ public:
 	{
 		sprSprite = std::make_unique<olc::Sprite>("./assets/chess-pieces.png");
 	}
+
+	void Display(olc::PixelGameEngine *pge, int iGridSize)
+	{
+		pge->DrawPartialSprite(vPos, sprSprite.get(), vSpritePos * iGridSize, olc::vi2d(1, 1) * iGridSize);
+	}
 };
 
 class Pawn : public ChessPiece
