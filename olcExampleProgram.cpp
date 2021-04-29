@@ -15,6 +15,9 @@ private:
 	int iGridSize = 64;
 	ChessPiece pieces[32];
 
+	olc::Pixel pWhiteColor = {199, 240, 216};
+	olc::Pixel pBlackColor = {107, 122, 101};
+
 public:
 	void DrawChessBoard()
 	{
@@ -26,7 +29,7 @@ public:
 			{
 				if (iCounter % 2 == 0)
 				{
-					FillRect(x, y, iGridSize, iGridSize, olc::WHITE);
+					FillRect(x, y, iGridSize, iGridSize, pWhiteColor);
 				}
 				iCounter++;
 			}
@@ -145,7 +148,7 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		Clear(olc::BLACK);
+		Clear(pBlackColor);
 		DrawChessBoard();
 
 		// draw and update all pieces
