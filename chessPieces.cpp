@@ -29,9 +29,14 @@ public:
 	}
 
 public:
+	bool IsHovered(olc::vi2d vMousePos)
+	{
+		return (vMousePos.x > vPos.x && vMousePos.x < (vPos.x + vSize.x) && vMousePos.y > vPos.y && vMousePos.y < (vPos.y + vSize.y));
+	}
+
 	bool IsSelected(olc::vi2d vMousePos, bool bRightMousePress)
 	{
-		return (vMousePos.x > vPos.x && vMousePos.x < (vPos.x + vSize.x) && vMousePos.y > vPos.y && vMousePos.y < (vPos.y + vSize.y) && bRightMousePress == true);
+		return (IsHovered(vMousePos) && bRightMousePress == true);
 	}
 
 	void SnapToGrid()
@@ -56,7 +61,7 @@ public:
 		pge->DrawPartialSprite(vPos, sprSprite.get(), vSpritePos * vSize, olc::vi2d(1, 1) * vSize);
 	}
 
-	void DisplayMoves(olc::PixelGameEngine *pge, olc::vi2d vMousePos)
+	virtual void DisplayMoves(olc::PixelGameEngine *pge, olc::vi2d vMousePos)
 	{
 		pge->FillCircle(vPos + (vSize / 2), 8, olc::WHITE);
 	}
@@ -69,7 +74,19 @@ public:
 
 	void DisplayMoves(olc::PixelGameEngine *pge, olc::vi2d vMousePos)
 	{
-		pge->FillCircle(vPos + (vSize / 2), 8, olc::RED);
+		if (!IsHovered(vMousePos))
+			return;
+
+		olc::vi2d vDir = {0, 0};
+
+		vDir.y = (vSpritePos.y - 0.5) * 2;
+
+		pge->FillCircle(vPos + (vSize / 2) + (vDir * vSize), 8, olc::WHITE);
+
+		if (!bHasMoved)
+		{
+			pge->FillCircle(vPos + (vSize / 2) + (vDir * (vSize * 2)), 8, olc::WHITE);
+		}
 	}
 };
 

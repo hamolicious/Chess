@@ -13,7 +13,7 @@ public:
 
 private:
 	int iGridSize = 64;
-	ChessPiece** pieces = new ChessPiece*[32];
+	ChessPiece **pieces = new ChessPiece *[32];
 
 	olc::Pixel pWhiteColor = {199, 240, 216};
 	olc::Pixel pBlackColor = {107, 122, 101};
@@ -59,7 +59,7 @@ public:
 				int iPX = x * iGridSize;
 				int iPY = y * iGridSize;
 
-				bool bIsBlack = y<2;
+				bool bIsBlack = y < 2;
 
 				if (y > 1)
 				{
@@ -150,6 +150,7 @@ public:
 
 		ptrSelection->vPos.x = GetMousePos().x - ptrSelection->vSize.x / 2;
 		ptrSelection->vPos.y = GetMousePos().y - ptrSelection->vSize.y / 2;
+		ptrSelection->bHasMoved = true;
 	}
 
 	bool OnUserCreate() override
@@ -187,9 +188,14 @@ public:
 				pieces[i]->SnapToGrid();
 			}
 
+			// move selected piece
 			UpdatePiecePosition();
+			// display all pieces
 			pieces[i]->Display(this);
-			pieces[i]->DisplayMoves(this, GetMousePos());
+
+			// show possible positions if hovered on piece
+			if (!GetMouse(0).bHeld)
+				pieces[i]->DisplayMoves(this, GetMousePos());
 		}
 		SetPixelMode(olc::Pixel::NORMAL);
 
