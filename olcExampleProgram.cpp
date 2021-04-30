@@ -13,7 +13,7 @@ public:
 
 private:
 	int iGridSize = 64;
-	ChessPiece pieces[32];
+	ChessPiece** pieces = new ChessPiece*[32];
 
 	olc::Pixel pWhiteColor = {199, 240, 216};
 	olc::Pixel pBlackColor = {107, 122, 101};
@@ -59,6 +59,8 @@ public:
 				int iPX = x * iGridSize;
 				int iPY = y * iGridSize;
 
+				bool bIsBlack = y<2;
+
 				if (y > 1)
 				{
 					iPY += iGridSize * 4;
@@ -67,22 +69,22 @@ public:
 				switch (*cPiece)
 				{
 				case ' ':
-					pieces[x + 8 * y] = Pawn({iPX, iPY}, y>1, 0);
+					pieces[x + 8 * y] = new Pawn({iPX, iPY}, bIsBlack, 0);
 					break;
 				case 'R':
-					pieces[x + 8 * y] = Rook({iPX, iPY}, y>1, 1);
+					pieces[x + 8 * y] = new Rook({iPX, iPY}, bIsBlack, 1);
 					break;
 				case 'N':
-					pieces[x + 8 * y] = Knight({iPX, iPY}, y>1, 2);
+					pieces[x + 8 * y] = new Knight({iPX, iPY}, bIsBlack, 2);
 					break;
 				case 'B':
-					pieces[x + 8 * y] = Bishop({iPX, iPY}, y>1, 3);
+					pieces[x + 8 * y] = new Bishop({iPX, iPY}, bIsBlack, 3);
 					break;
 				case 'Q':
-					pieces[x + 8 * y] = Queen({iPX, iPY}, y>1, 4);
+					pieces[x + 8 * y] = new Queen({iPX, iPY}, bIsBlack, 4);
 					break;
 				case 'K':
-					pieces[x + 8 * y] = King({iPX, iPY}, y>1, 5);
+					pieces[x + 8 * y] = new King({iPX, iPY}, bIsBlack, 5);
 					break;
 				default:
 					break;
@@ -171,22 +173,23 @@ public:
 		for (int i = 0; i < 32; i++)
 		{
 			// check if mouse if selecting this piece
-			bool bIsSelected = pieces[i].IsSelected(GetMousePos(), GetMouse(0).bHeld);
+			bool bIsSelected = pieces[i]->IsSelected(GetMousePos(), GetMouse(0).bHeld);
 
 			// make a selection (if exists)
 			if (ptrSelection->vPos.x == -1 && ptrSelection->vPos.y == -1 && bIsSelected)
 			{
-				ptrSelection = &pieces[i];
+				ptrSelection = pieces[i];
 			}
 
 			// snap unselected pieces to grid
-			if (ptrSelection != &pieces[i])
+			if (ptrSelection != pieces[i])
 			{
-				pieces[i].SnapToGrid();
+				pieces[i]->SnapToGrid();
 			}
 
 			UpdatePiecePosition();
-			pieces[i].Display(this, iGridSize);
+			pieces[i]->Display(this);
+			pieces[i]->DisplayMoves(this, GetMousePos());
 		}
 		SetPixelMode(olc::Pixel::NORMAL);
 
