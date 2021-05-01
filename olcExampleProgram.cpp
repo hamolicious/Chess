@@ -150,7 +150,6 @@ public:
 
 		ptrSelection->vPos.x = GetMousePos().x - ptrSelection->vSize.x / 2;
 		ptrSelection->vPos.y = GetMousePos().y - ptrSelection->vSize.y / 2;
-		ptrSelection->bHasMoved = true;
 	}
 
 	bool OnUserCreate() override

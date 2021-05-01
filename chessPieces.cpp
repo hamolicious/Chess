@@ -7,6 +7,8 @@ public:
 	olc::vi2d vSpritePos;
 	olc::vi2d vSize = {64, 64};
 
+	std::string sOldPos = "";
+
 	std::unique_ptr<olc::Sprite> sprSprite;
 
 	bool bHasMoved = false;
@@ -25,6 +27,7 @@ public:
 		vPos = vPos_;
 		vSpritePos = {iPieceIndex, (int)bIsBlack};
 
+		SavePos();
 		LoadSprite();
 	}
 
@@ -39,15 +42,92 @@ public:
 		return (IsHovered(vMousePos) && bRightMousePress == true);
 	}
 
+	std::string PosToNotation()
+	{
+		int iFile = (vPos.x / vSize.x);
+		int iRank = (vPos.y / vSize.y);
+
+		std::string sFile = "";
+		std::string sRank = "";
+
+		switch (iFile)
+		{
+		case 0:
+			sFile = "A";
+			break;
+		case 1:
+			sFile = "B";
+			break;
+		case 2:
+			sFile = "C";
+			break;
+		case 3:
+			sFile = "D";
+			break;
+		case 4:
+			sFile = "E";
+			break;
+		case 5:
+			sFile = "F";
+			break;
+		case 6:
+			sFile = "G";
+			break;
+		case 7:
+			sFile = "H";
+			break;
+		}
+		switch (iRank)
+		{
+		case 0:
+			sRank = "1";
+			break;
+		case 1:
+			sRank = "2";
+			break;
+		case 2:
+			sRank = "3";
+			break;
+		case 3:
+			sRank = "4";
+			break;
+		case 4:
+			sRank = "5";
+			break;
+		case 5:
+			sRank = "6";
+			break;
+		case 6:
+			sRank = "7";
+			break;
+		case 7:
+			sRank = "8";
+			break;
+		}
+
+		std::string notation = sFile + sRank;
+		return notation;
+	}
+
+	void SavePos()
+	{
+		sOldPos = PosToNotation();
+	}
+
 	void SnapToGrid()
 	{
 		int iXPos = ((vPos.x + (vSize.x / 2)) % vSize.x);
 		int iYPos = ((vPos.y + (vSize.y / 2)) % vSize.y);
 
 		if (iXPos != 0)
-		{
 			vPos.x -= iXPos - (vSize.x / 2);
+		if (iYPos != 0)
 			vPos.y -= iYPos - (vSize.y / 2);
+
+
+		if (PosToNotation() != sOldPos)
+		{
+			bHasMoved = true;
 		}
 	}
 
@@ -61,10 +141,7 @@ public:
 		pge->DrawPartialSprite(vPos, sprSprite.get(), vSpritePos * vSize, olc::vi2d(1, 1) * vSize);
 	}
 
-	virtual void DisplayMoves(olc::PixelGameEngine *pge, olc::vi2d vMousePos)
-	{
-		pge->FillCircle(vPos + (vSize / 2), 8, olc::WHITE);
-	}
+	virtual void DisplayMoves(olc::PixelGameEngine *pge, olc::vi2d vMousePos) {}
 };
 
 class Pawn : public ChessPiece
@@ -72,7 +149,7 @@ class Pawn : public ChessPiece
 public:
 	Pawn(olc::vi2d vPos_, bool bIsBlack, int iPieceIndex) : ChessPiece(vPos_, bIsBlack, iPieceIndex) {}
 
-	void DisplayMoves(olc::PixelGameEngine *pge, olc::vi2d vMousePos)
+	void DisplayMoves(olc::PixelGameEngine *pge, olc::vi2d vMousePos) override
 	{
 		if (!IsHovered(vMousePos))
 			return;
